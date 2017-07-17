@@ -5,7 +5,11 @@ DECLARE
   v_stock bb_product_request.qty%type;
   v_id bb_product_request.idproduct%type;
  BEGIN
-   If :NEW.DTRECD is not null THEN
+   If :OLD.DTRECD is not null and :NEW.DTRECD is null THEN
+    Update BB_PRODUCT
+    set stock = stock - reorder
+     WHERE idProduct = :NEW.idProduct;
+    elsif :NEW.DTRECD is not null THEN
     Update BB_PRODUCT
     set stock = reorder + stock
      WHERE idProduct = :NEW.idProduct;
