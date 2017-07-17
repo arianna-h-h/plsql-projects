@@ -1,0 +1,18 @@
+create or replace function comp_date
+(p_d1 in date,
+p_d2 in date)
+return INTEGER
+is
+lv_diff number(1);
+lv_days integer(10);
+begin
+lv_days := p_d1 - p_d2;
+if p_d1 < p_d2 then
+lv_diff := -1;
+elsif p_d1 = p_d2 then
+lv_diff := 0;
+elsif p_d1 > p_d2 then
+lv_diff := 1;
+end if;
+return lv_diff;
+end;
