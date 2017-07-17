@@ -1,0 +1,14 @@
+CREATE OR REPLACE PROCEDURE basket_confirm_sp
+  (p_id in bb_basket.idbasket%type,
+  p_subtotal in bb_basket.subtotal%type,
+  p_shipping in bb_basket.shipping%type,
+  p_tax in bb_basket.tax%type,
+  p_total in bb_basket.total%type)
+IS
+begin
+update BB_BASKET
+set orderplaced = 1, subtotal = p_subtotal, 
+shipping = p_shipping, tax = p_tax, total = p_total
+where idbasket = p_id;
+commit;
+end;
