@@ -1,0 +1,36 @@
+DECLARE
+lv_sal number(6);
+lv_emp_no number(6);
+lv_raise number(7);
+lv_new_sal number(6);
+lv_total_cost number(8):= 0 ;
+cursor c is 
+  select sal
+  , empno
+  from emp;
+BEGIN
+open c;
+loop
+  fetch c into lv_sal, lv_emp_no;
+  exit when c%notfound;
+if lv_emp_no != 7839 then
+lv_raise := lv_sal * .06;
+  if lv_raise > 2000 then
+  lv_raise := 2000;
+  else
+  lv_raise := lv_raise;
+  end if;
+  lv_new_sal := lv_sal + lv_raise;
+  UPDATE EMP
+   SET sal = lv_new_sal
+   where empno = lv_emp_no;
+lv_total_cost := lv_total_cost + lv_raise;
+else
+lv_new_sal := lv_sal;
+end if;
+dbms_output.put_line('Employee ['||lv_emp_no||'] has the initial salary of ['||lv_sal||'], 
+raise of ['||lv_raise||'] for a final salary of ['||lv_new_sal||']');
+end loop;
+close c;
+dbms_output.put_line('Total cost to BrewBeans is ['||lv_total_cost||']');
+end;
