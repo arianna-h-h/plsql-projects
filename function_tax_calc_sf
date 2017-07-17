@@ -1,0 +1,20 @@
+CREATE OR REPLACE function tax_calc_sf
+  (p_idbasket in BB_BASKET.IDBASKET%type)
+  return number
+IS
+lv_tax_amt BB_basket.subtotal%type;
+lv_tax_rate BB_TAX.TAXRATE%type;
+lv_state BB_BASKET.SHIPSTATE%type;
+lv_subtotal BB_BASKET.SUBTOTAL%type;
+begin
+select shipstate into lv_state from bb_basket where idbasket = p_idbasket;
+select taxrate into lv_tax_rate from bb_tax
+where state = lv_state;
+select subtotal into lv_subtotal from bb_basket where idbasket = p_idbasket;
+lv_tax_amt := lv_tax_rate * lv_subtotal;
+return lv_tax_amt;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+     lv_tax_amt := 0;
+return lv_tax_amt;
+end;
