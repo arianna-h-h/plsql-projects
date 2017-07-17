@@ -1,0 +1,28 @@
+Create or replace procedure cust_pp
+(p_low in purchase_order.CUST_id%type,
+P_high in purchase_order.cust_id%type)
+Is
+Cursor c is
+Select cust_id
+From customer
+Where cust_id >= p_low and cust_id <= p_high
+Order by cust_id;
+pv_cust_id customer.cust_id%type;
+pv_cus customer.cust_id%type;
+Begin
+If p_low > P_high then 
+dbms_output.put_line('Invalid number');
+Else
+For ids in c loop
+pv_cus := ids.cust_id;
+begin
+select unique cust_id into pv_cust_id from purchase_order where cust_id = pv_cus;
+exception when no_data_found then 
+Dbms_output.put_line(pv_cus || ' does not have a purchase order');
+end;
+if pv_cus = pv_cust_id then
+Dbms_output.put_line(pv_cus || ' has a purchase order');
+end if;
+end loop;
+End if;
+End; 
