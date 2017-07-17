@@ -1,0 +1,27 @@
+create or replace trigger bb_salesum_trg
+after update on bb_basket 
+for each row
+when (new.orderplaced = 1)
+declare
+lv_idproduct number(2,1);
+lv_price number(6,2);
+lv_quantity number(5);
+cursor c is
+select idproduct from bb_basketitem
+where idbasket = (3);
+Begin
+for ids in c loop
+insert into bb_sales_sum (IDPRODUCT)
+values (ids.idproduct);
+select sum(price) into lv_price from bb_product 
+where ids.idproduct = idProduct;
+select sum(QUANTITY) into lv_quantity from bb_basketitem
+where ids.idproduct = idProduct;
+update BB_SALES_SUM
+set TOTAL_QUANTITY = lv_quantity
+where idproduct = ids.idproduct;
+update BB_SALES_SUM
+set total_sales = lv_price * lv_quantity
+where idproduct = ids.idproduct;
+end loop;
+end;  
