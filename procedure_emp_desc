@@ -1,0 +1,22 @@
+create or replace procedure emp_desc
+(p_empno in EMP.EMPNO%type)
+is
+cursor c is
+select ename, job, mgr, hiredate, 
+sal, comm, deptno from emp where EMPNO = p_empno;
+emp_rec c%rowtype;
+begin
+open c;
+fetch c into emp_rec;
+if c%notfound then raise  no_data_found;
+end if;
+dbms_output.put_line('Employee name: ' || emp_rec.ename);
+dbms_output.put_line('Employee job: ' || emp_rec.job);
+dbms_output.put_line('Employee manager: ' || emp_rec.mgr);
+dbms_output.put_line('Employee hiredate: ' || emp_rec.hiredate);
+dbms_output.put_line('Employee salary: ' || emp_rec.sal);
+dbms_output.put_line('Employee communication: ' || emp_rec.comm);
+dbms_output.put_line('Employee department number: ' || emp_rec.deptno);
+exception when no_data_found then 
+dbms_output.put_line('Employee number ' || p_empno || ' does not exist.');
+end;
