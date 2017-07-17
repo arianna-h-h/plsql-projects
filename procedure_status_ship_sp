@@ -1,0 +1,15 @@
+CREATE OR REPLACE PROCEDURE status_ship_sp
+  (p_id in BB_BASKETSTATUS.IDBASKET%type,
+  p_stage in bb_basketstatus.idstage%type,
+  p_dt_ship in BB_BASKETSTATUS.DTSTAGE%type,
+  p_tracker in BB_BASKETSTATUS.SHIPPINGNUM%type,
+  p_shipper in bb_basketstatus.shipper%type
+ )
+IS
+begin
+update BB_BASKETstatus
+set idstatus = bb_status_seq.nextval, idstage = p_stage, dtstage = p_dt_ship, 
+shippingnum = p_tracker, shipper = p_shipper
+where idbasket = p_id;
+commit;
+end;
