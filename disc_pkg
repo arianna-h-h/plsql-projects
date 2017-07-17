@@ -1,0 +1,22 @@
+create or replace package disc_pkg
+is
+function pv_info_pf(p_shopper in number)
+return number;
+pv_disc_num number; 
+pv_disc_text varchar2(1);
+end;
+/
+
+create or replace package body disc_pkg is
+function pv_info_pf (p_shopper in number)
+return number
+is 
+lv_count number(10);
+begin
+select count(idbasket)
+into lv_count
+from bb_basket
+where idshopper = p_shopper;
+return lv_count;
+end pv_info_pf;
+end;
