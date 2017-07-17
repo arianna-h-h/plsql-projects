@@ -1,0 +1,9 @@
+create or replace function dollar_fmt_sf
+(p_num number)
+return varchar2
+is 
+lv_amt_txt varchar2(20);
+begin
+lv_amt_txt := to_char(p_num, '$99,999.99');
+return lv_amt_txt;
+end;
