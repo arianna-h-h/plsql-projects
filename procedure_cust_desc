@@ -1,0 +1,20 @@
+create or replace procedure cust_desc
+(p_a_id in CUSTOMER.ACCOUNT_ID%type)
+is
+cursor c is
+select cust_id, cust_name, 
+account_type, state from customer where account_id = p_a_id;
+cust_rec c%rowtype;
+begin
+open c;
+fetch c into cust_rec;
+if c%notfound then raise  no_data_found;
+end if;
+dbms_output.put_line('Customer ID: ' || cust_rec.cust_id);
+dbms_output.put_line('Customer name: ' || cust_rec.cust_name);
+dbms_output.put_line('Account type: ' || cust_rec.account_type);
+dbms_output.put_line('State: ' || cust_rec.state);
+exception when no_data_found then 
+dbms_output.put_line('CUST_ID not valid');
+end;
+ 
