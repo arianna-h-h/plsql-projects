@@ -1,0 +1,16 @@
+CREATE OR REPLACE PROCEDURE promo_ship_sp
+  (p_mth IN CHAR,
+   p_year IN CHAR)
+   is 
+   cursor c is 
+   select unique idshopper from bb_basket
+   WHERE TO_CHAR(dtCreated) < '15-FEB-2012';
+   promo_flag char(1);
+begin
+for ids in c loop
+promo_flag := 1;
+INSERT INTO bb_promolist
+ 	    VALUES (IDS.idshopper, p_mth, p_year, promo_flag, NULL);
+end loop;
+commit;
+end;
