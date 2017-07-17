@@ -1,0 +1,18 @@
+Create or replace trigger bb_ordcancel_trg
+After insert or update of idbasket on bb_basketstatus
+for each row
+When (new.idstage = 4)
+declare
+Cursor c is
+select idproduct, quantity, idbasket
+From  bb_basketitem;
+Begin
+For ids in c loop
+Update BB_product
+Set stock = stock + ids.quantity
+where idproduct = ids.idproduct;
+Update bb_basket
+Set orderplaced = 0
+where idbasket = ids.idbasket;
+End loop;
+End;
