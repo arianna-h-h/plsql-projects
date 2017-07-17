@@ -1,0 +1,48 @@
+create or replace package login_pkg is
+function pw_ck
+(p_username varchar2,
+p_pw varchar2)
+return varchar2;
+procedure pw_p
+(p_username in varchar2,
+p_shop_id out number,
+p_zip out varchar2);
+end; 
+/
+
+create or replace package body login_pkg is
+function pw_ck
+(p_username varchar2,
+p_pw varchar2)
+return varchar2
+is
+lv_user varchar2(8);
+lv_pw varchar2(8);
+lv_ck varchar2(1);
+begin
+select username, password 
+into lv_user, lv_pw 
+from bb_shopper
+where p_username = username and p_pw = password;
+lv_ck := 'Y';
+return lv_ck;
+exception when no_data_found then
+lv_ck := 'N';
+return lv_ck;
+end pw_ck;
+procedure pw_p
+(p_username in varchar2,
+p_shop_id out number,
+p_zip out varchar2)
+is
+lv_shop_id number(4);
+lv_zip varchar2(15);
+begin
+select idshopper, substr(zipcode, 1, 3)
+into lv_shop_id, lv_zip
+from bb_shopper
+where p_username = username;
+p_shop_id := lv_shop_id;
+p_zip := lv_zip;
+end pw_p;
+end;
