@@ -1,0 +1,80 @@
+CREATE OR REPLACE PACKAGE  hospital_pkg IS
+function FindPatient (pat_n in number) return boolean;
+function FindPatient (pat_n in varchar2) return boolean;
+FUNCTION BOOLEAN_TO_CHAR(STATUS IN BOOLEAN)
+RETURN VARCHAR2;
+TYPE table_rec IS RECORD(
+     pat_nbr patient.pat_nbr%type, 
+      trt_procedure treatment.trt_procedure%type,
+    phys_id  physician.phys_id%type,
+      phys_name physician.phys_name%type,
+      phys_specialty physician.phys_specialty%type);
+TYPE t_patTrt is table of table_rec;
+e_DupPhysFound EXCEPTION;
+pragma exception_init(e_DupPhysFound, -20001);
+procedure BuildPatTbl(treat_table out t_patTrt, num_rows in out number);
+procedure NewPhys(p_id in number, phys_name in varchar2, phys_phone in varchar2, phys_spec in varchar2);
+end;
+/
+
+CREATE OR REPLACE PACKAGE body hospital_pkg is
+function FindPatient (pat_n in number) return boolean
+is 
+val boolean := false;
+begin
+  for c1 in ( select pat_name from patient where pat_n = pat_nbr) loop
+    val := true;
+  end loop;
+  return val ;
+end FindPatient; 
+function FindPatient (pat_n in varchar2) return boolean
+is 
+val boolean := false;
+begin
+  for c1 in ( select pat_nbr from patient where pat_n = pat_name) loop
+    val := true;
+  end loop;
+  return val ;
+end FindPatient; 
+FUNCTION BOOLEAN_TO_CHAR(STATUS IN BOOLEAN)
+RETURN VARCHAR2 IS
+BEGIN
+  RETURN
+   CASE STATUS
+     WHEN TRUE THEN 'TRUE'
+     WHEN FALSE THEN 'FALSE'
+     ELSE 'NULL'
+   END;
+END boolean_to_char;
+procedure BuildPatTbl(treat_table out t_patTrt, num_rows in out number) is
+  stmt varchar2(1000);
+   stmt2 varchar2(1000);
+   p_count_var number(25);
+begin
+stmt := 'create table newTablePatient(
+Pat_Nbr number(4) ,
+	Phys_ID varchar2(25) ,
+	Trt_Procedure varchar2(25) ,
+	Trt_Date varchar2(25),
+	 CONSTRAINT treatment_nbr_pk PRIMARY KEY(Pat_Nbr, Phys_ID, Trt_Procedure, Trt_Date))';
+    execute immediate stmt;
+ stmt2 :='insert into newTablePatient values(select * from patient)'; 
+  execute immediate stmt2;
+  select count(pat_nbr) into p_count_var from patient;
+  num_rows := p_count_var;
+end BuildPatTbl;
+procedure NewPhys(p_id in number, phys_name in varchar2, phys_phone in varchar2, phys_spec in varchar2) is
+p_phys_name varchar2(25);
+val boolean := false;
+begin
+ for c1 in (select phys_name from physician where p_id = phys_id) loop
+    val := true;
+    exit;
+  end loop;
+  if val = true then
+  raise e_DupPhysFound;
+  else
+insert into physician values (p_id, phys_name, phys_phone, phys_spec); 
+end if;
+end NewPhys;
+end;
