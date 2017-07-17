@@ -1,0 +1,12 @@
+create table physician(
+phys_id number(3) ,
+	phys_Name varchar2(25) ,
+	phys_phone varchar2(20) ,
+	phys_specialty varchar2(25),
+	 CONSTRAINT phys_id_pk PRIMARY KEY(phys_id));
+
+insert into physician values (101, ‘Wilcox, Chris’, ‘512-329-1848’, 'Ear, Throat, Eyes');
+insert into physician values (102, 'Nusca, Jane', '512-516-3947', 'Cardiovascular');
+insert into physician values (103, 'Gomez, Juan', '512-382-4987', 'Orthopedics');
+insert into physician values (104, 'Li, Jan', '512-516-3948', 'Cardiovascular');
+insert into physician values (105, 'Simmons, Alex', '512-442-5700', 'Hemotology');
