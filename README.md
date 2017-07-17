@@ -1,2 +1,3 @@
-# sql-trigger
-PL SQL Class Project
+# plsql-projects
+PL SQL Class Projects. 
+
