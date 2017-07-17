@@ -1,0 +1,27 @@
+
+create or replace function ord_ship_sf
+(p_id in bb_basket.idbasket%type)
+return char
+is
+lv_ship bb_basketstatus.idstage%type;
+lv_orderdt bb_basket.dtordered%type;
+lv_shipdt bb_basketstatus.dtstage%type;
+lv_msg char(20);
+lv_days number(10);
+maxdt date;
+begin
+select max(idstage) into lv_ship from bb_basketstatus where idbasket = p_id;
+select dtstage into lv_shipdt from bb_basketstatus where idbasket = p_id and idstage = lv_ship;
+select dtordered into lv_orderdt from bb_basket where idbasket = p_id;
+if lv_ship != 5 then
+lv_msg := 'Not shipped';
+else
+lv_days := lv_shipdt - lv_orderdt;
+if lv_days <= 1 then
+lv_msg := 'OK';
+else
+lv_msg := 'Check';
+end if;
+end if;
+return lv_msg;
+end;
