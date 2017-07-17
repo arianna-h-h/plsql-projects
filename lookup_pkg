@@ -1,0 +1,30 @@
+CREATE OR REPLACE PACKAGE lookup_pkg
+ IS
+ FUNCTION status_desc_pf
+  (p_stage IN NUMBER)
+  RETURN VARCHAR2;
+END;
+/
+
+CREATE OR REPLACE PACKAGE BODY lookup_pkg
+ IS
+FUNCTION status_desc_pf
+  (p_stage IN NUMBER)
+  RETURN VARCHAR2
+ IS
+  lv_stage_txt VARCHAR2(30);
+BEGIN
+ IF p_stage = 1 THEN
+   lv_stage_txt := 'Order Submitted';
+ ELSIF p_stage = 2 THEN
+   lv_stage_txt := 'Accepted, sent to shipping';
+ ELSIF p_stage = 3 THEN
+   lv_stage_txt := 'Backordered';
+ ELSIF p_stage = 4 THEN
+   lv_stage_txt := 'Cancelled';
+ ELSIF p_stage = 5 THEN
+   lv_stage_txt := 'Shipped';
+ END IF;
+ RETURN lv_stage_txt;
+END;
+END;
